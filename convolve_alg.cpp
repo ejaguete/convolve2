@@ -269,8 +269,8 @@ int nextPow2(int v) {
 
 void four1(vector<float> &data, int nn, int isign) {
     unsigned long n, mmax, m, j, istep, i;
-    double wtemp, wr, wpr, wpi, wi, theta;
-    double tempr, tempi;
+    float wtemp, wr, wpr, wpi, wi, theta;
+    float tempr, tempi;
 
     n = nn << 1;
     j = 1;
