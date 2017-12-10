@@ -292,11 +292,12 @@ void four1(vector<float> &data, int nn, int isign) {
     while (n > mmax) {
 		istep = mmax << 1;
 		theta = isign * (TWO_PI/ mmax);
-		wtemp = sin(0.5 * theta);
+		//wtemp = sin(0.5 * theta);
 		wpr = -2.0 * wtemp * wtemp;
 		wpi = sin(theta);
 		wr = 1.0;
 		wi = 0.0;
+		wtemp = wr;
 		for (m = 1; m < mmax; m += 2) {
 		    for (i = m; i <= n; i += istep) {
 				j = i + mmax;
@@ -306,8 +307,7 @@ void four1(vector<float> &data, int nn, int isign) {
 				data[j] = data[i] - tempi;
 				data[i-1] += tempr;
 				data[i] += tempi;
-		    }
-		    wtemp = wr;
+		    }	    
 			wr += (wr*wpr) - (wi*wpi);
 			wi += wi*wpr + (wtemp*wpi);
 		}
