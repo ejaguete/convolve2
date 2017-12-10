@@ -82,11 +82,13 @@ int main(int argc , char *argv[]) {
 		vector<float> h;
 		x = parseWavFile(inputfile);
 		h = parseWavFile(irfile);
+		x.shrink_to_fit();
+		h.shrink_to_fit();
 		
-		int outputLength = x.size() + h.size() -1;
+		unsigned int outputLength = x.size() + h.size() -1;
 
 		// pad zeros
-		int maxlen = outputLength;
+		unsigned int maxlen = outputLength;
 		if(!isPow2(maxlen))
 			maxlen = nextPow2(maxlen);
 
@@ -97,15 +99,21 @@ int main(int argc , char *argv[]) {
 			h.push_back(0.0);
 
 		vector<float> X;
-		for(int i=0; i<x.size(); i++) {
+		for(unsigned int i=0; i<x.size(); i++) {
 			X.push_back(x[i]);	// real
 			X.push_back(0.0);	// imaginary
 		}
 		vector<float> H;
-		for(int i=0; i<h.size(); i++) {
+		for(unsigned int i=0; i<h.size(); i++) {
 			H.push_back(h[i]);	// real
 			H.push_back(0.0);	// imaginary
 		}
+		X.shrink_to_fit();
+		H.shrink_to_fit();
+		
+		// delete x and h
+		vector<float>().swap(x);
+		vector<float>().swap(h);
 		
 		four1(X, X.size()/2, 1);
 		four1(H, H.size()/2, 1);
@@ -114,14 +122,20 @@ int main(int argc , char *argv[]) {
 		vector<float> Y;
 		Y = complexMult(X, H);
 		four1(Y, Y.size()/2, -1);
+		Y.shrink_to_fit();
+		
+		//delete X and H
+		vector<float>().swap(X);
+		vector<float>().swap(H);
 		
 		vector<float> y;
-		for(int i=0; i<Y.size(); i+=2) {
+		for(unsigned int i=0; i<Y.size(); i+=2) {
 			y.push_back(Y[i]/(float) outputLength);
 		}
+		y.shrink_to_fit();
 
 		// scale y[] back to ints
-		for (int i=0; i<y.size(); i++) {
+		for (unsigned int i=0; i<y.size(); i++) {
 			y[i] = y[i] * FLOAT2INT;
 		}
 
@@ -273,7 +287,7 @@ void four1(vector<float> &data, int nn, int isign) {
 vector<float> complexMult(vector<float> &x, vector<float> &h) {
 	vector<float> y;
 	
-	for(int i=0; i<x.size(); i+=2) {
+	for(unsigned int i=0; i<x.size(); i+=2) {
 		y.push_back((x[i]*h[i]) - (x[i+1]*h[i+1]));	// real part
 		y.push_back((x[i+1]*h[i]) + (x[i]*h[i+1]));	// imaginary part 
 	}
