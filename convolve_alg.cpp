@@ -106,18 +106,14 @@ int main(int argc , char *argv[]) {
 			h.push_back(0.0);
 
 		vector<float> X;
-		for(unsigned int i=0; i<x.size(); i++) {
+		for(unsigned int i=0; i<x.size(); i+=2) {
+			X.push(x[i]);		// real
 			X.push_back(0.0);	// imaginary
 		}
-		for(unsigned int i=0, j=0; i<x.size(), j<x.size(); i++, j+=2) {
-			X[j] = x[i];		// real
-		}
 		vector<float> H;
-		for(unsigned int i=0; i<h.size(); i++) {
+		for(unsigned int i=0; i<h.size(); i+=2) {
+			H.push_back(h[i]);
 			H.push_back(0.0);	// imaginary
-		}
-		for(unsigned int i=0, j=0; i<h.size(), j<h.size(); i++, j+=2) {
-			H[j] = h[i];		// real
 		}
 		X.shrink_to_fit();
 		H.shrink_to_fit();
