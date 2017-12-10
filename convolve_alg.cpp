@@ -107,7 +107,7 @@ int main(int argc , char *argv[]) {
 
 		vector<float> X;
 		for(unsigned int i=0; i<x.size(); i+=2) {
-			X.push(x[i]);		// real
+			X.push_back(x[i]);		// real
 			X.push_back(0.0);	// imaginary
 		}
 		vector<float> H;
