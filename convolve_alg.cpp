@@ -107,20 +107,20 @@ int main(int argc , char *argv[]) {
 
 		vector<float> X;
 		for(unsigned int i=0; i<x.size(); i++) {
-			X.push_back(x[i]);	// real
 			X.push_back(0.0);	// imaginary
+		}
+		for(unsigned int i=0, j=0; i<x.size(), j<x.size(); i++, j+=2) {
+			X[j] = x[i];		// real
 		}
 		vector<float> H;
 		for(unsigned int i=0; i<h.size(); i++) {
-			H.push_back(h[i]);	// real
 			H.push_back(0.0);	// imaginary
+		}
+		for(unsigned int i=0, j=0; i<h.size(), j<h.size(); i++, j+=2) {
+			H[j] = h[i];		// real
 		}
 		X.shrink_to_fit();
 		H.shrink_to_fit();
-		
-		// delete x and h
-		vector<float>().swap(x);
-		vector<float>().swap(h);
 		
 		t = clock();
 		four1(X, X.size()/2, 1);
@@ -147,7 +147,8 @@ int main(int argc , char *argv[]) {
 		
 		vector<float> y;
 		for(unsigned int i=0; i<Y.size(); i+=2) {
-			y.push_back(Y[i]/(float) outputLength);
+			float temp = Y[i]/(float) outputLength;
+			y.push_back(temp);
 		}
 		y.shrink_to_fit();
 
@@ -169,6 +170,8 @@ int main(int argc , char *argv[]) {
 		cout << "complexMult(X, H): 				" << (float)t4/CLOCKS_PER_SEC << "s	" << t4/totalTime*100 << "%" << endl;
 		cout << "four1(Y, Y.size()/2, -1): 			" << (float)t5/CLOCKS_PER_SEC << "s	" << t5/totalTime*100 << "%" << endl;
 		cout << "writeWav(outputfile, y.size(), y, 44100): 	" << (float)t5/CLOCKS_PER_SEC << "s	" << t6/totalTime*100 << "%" << endl;
+		cout << "-----" << endl;
+		cout << "total time: " << (float)totalTime/CLOCKS_PER_SEC << " seconds" << endl;
 		return 0;
 	}
 	
