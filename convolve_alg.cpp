@@ -72,6 +72,7 @@ int main(int argc , char *argv[]) {
 		printf("Missing arguments.\n");
 		return 1;
 	} else {
+		clock_t t; // timer
 		char *inputfile = argv[1];
 		char *irfile = argv[2];
 		char *outputfile = argv[3];
@@ -80,8 +81,14 @@ int main(int argc , char *argv[]) {
 		
 		vector<float> x;
 		vector<float> h;
+		
+		t = clock();
 		x = parseWavFile(inputfile);
+		float t0 = clock() - t;
+		
+		t = clock(); 
 		h = parseWavFile(irfile);
+		float t1 = clock() - t;
 		x.shrink_to_fit();
 		h.shrink_to_fit();
 		
@@ -115,13 +122,23 @@ int main(int argc , char *argv[]) {
 		vector<float>().swap(x);
 		vector<float>().swap(h);
 		
+		t = clock();
 		four1(X, X.size()/2, 1);
+		float t2 = clock() - t;
+		
+		t= clock();
 		four1(H, H.size()/2, 1);
+		float t3 = clock() - t;
 		
 		// multiply DFTs
 		vector<float> Y;
+		t = clock();
 		Y = complexMult(X, H);
+		float t4 = clock() - t;
+		
+		t = clock();
 		four1(Y, Y.size()/2, -1);
+		float t5 = clock() - t;
 		Y.shrink_to_fit();
 		
 		//delete X and H
@@ -140,7 +157,18 @@ int main(int argc , char *argv[]) {
 		}
 
 		// write input wav
+		t = clock();
 		writeWav(outputfile, y.size(), y, 44100);
+		float t6 = clock() - t;
+		
+		float totalTime = t0 + t1 + t2 + t3 + t4 + t5 + t6;
+		cout << "parseWavFile(inputfile): 			" << (float)t0/CLOCKS_PER_SEC << "s	" << t0/totalTime*100 << "%" << endl;
+		cout << "parseWavFile(irfile): 				" << (float)t1/CLOCKS_PER_SEC << "s	" << t1/totalTime*100 << "%" << endl;
+		cout << "four1(X, X.size()/2, 1): 			" << (float)t2/CLOCKS_PER_SEC << "s	" << t2/totalTime*100 << "%" << endl;
+		cout << "four1(H, H.size()/2, 1): 			" << (float)t3/CLOCKS_PER_SEC << "s	" << t3/totalTime*100 << "%" << endl;
+		cout << "complexMult(X, H): 				" << (float)t4/CLOCKS_PER_SEC << "s	" << t4/totalTime*100 << "%" << endl;
+		cout << "four1(Y, Y.size()/2, -1): 			" << (float)t5/CLOCKS_PER_SEC << "s	" << t5/totalTime*100 << "%" << endl;
+		cout << "writeWav(outputfile, y.size(), y, 44100): 	" << (float)t5/CLOCKS_PER_SEC << "s	" << t6/totalTime*100 << "%" << endl;
 		return 0;
 	}
 	
