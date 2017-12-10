@@ -292,12 +292,11 @@ void four1(vector<float> &data, int nn, int isign) {
     while (n > mmax) {
 		istep = mmax << 1;
 		theta = isign * (TWO_PI/ mmax);
-		//wtemp = sin(0.5 * theta);
+		wtemp = sin(0.5 * theta);
 		wpr = -2.0 * wtemp * wtemp;
 		wpi = sin(theta);
 		wr = 1.0;
 		wi = 0.0;
-		wtemp = wr;
 		for (m = 1; m < mmax; m += 2) {
 		    for (i = m; i <= n; i += istep) {
 				j = i + mmax;
@@ -307,7 +306,8 @@ void four1(vector<float> &data, int nn, int isign) {
 				data[j] = data[i] - tempi;
 				data[i-1] += tempr;
 				data[i] += tempi;
-		    }	    
+		    }
+		    wtemp = wr;
 			wr += (wr*wpr) - (wi*wpi);
 			wi += wi*wpr + (wtemp*wpi);
 		}
@@ -317,10 +317,18 @@ void four1(vector<float> &data, int nn, int isign) {
 
 vector<float> complexMult(vector<float> &x, vector<float> &h) {
 	vector<float> y;
+	float re_x, im_x, re_h, im_h;
 	
 	for(unsigned int i=0; i<x.size(); i+=2) {
-		y.push_back((x[i]*h[i]) - (x[i+1]*h[i+1]));	// real part
-		y.push_back((x[i+1]*h[i]) + (x[i]*h[i+1]));	// imaginary part 
+		re_x = x[i];
+		im_x = x[i+1];
+		re_h = h[i];
+		im_h = h[i+1];
+		
+		y.push_back((re_x*re_h) - (im_x*im_h));			// real
+		//y.push_back((x[i]*h[i]) - (x[i+1]*h[i+1]));	// real part
+		y.push_back((im_x*re_h) + (re_x*im_h));			// imaginary
+		//y.push_back((x[i+1]*h[i]) + (x[i]*h[i+1]));	// imaginary part 
 	}
 	return y;
 }
