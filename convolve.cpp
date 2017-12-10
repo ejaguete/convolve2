@@ -64,9 +64,7 @@ int main(int argc , char *argv[]) {
 		char *outputfile = argv[3];
 		
 		printf("input file: %s\nIR file: %s\noutput file: %s\n\n",inputfile, irfile, outputfile);
-		
-		clock_t timer;
-		timer = clock();
+
 		vector<float> x;
 		vector<float> h;
 		x = parseWavFile(inputfile);
@@ -83,8 +81,6 @@ int main(int argc , char *argv[]) {
 		
 		// write input wav
 		writeWav(outputfile, y.size(), y, 44100);
-		timer = clock() - timer;
-		printf("WAV file created in %.2f minutes\n", (float) timer/CLOCKS_PER_SEC/60);
 		
 		return 0;
 	}
